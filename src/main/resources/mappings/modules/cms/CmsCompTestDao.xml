@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.cms.dao.CmsCompTestDao">
+    
+	<sql id="cmsCompTestColumns">
+		a.id AS "id",
+		a.singletext AS "singletext",
+		a.multitext AS "multitext",
+		a.dropdown AS "dropdown",
+		a.radiobtn AS "radiobtn",
+		a.checkbox AS "checkbox",
+		a.dateselection AS "dateselection",
+		a.personselection AS "personselection",
+		a.sectorselection AS "sectorselection",
+		a.regionalchoice AS "regionalchoice",
+		a.treeselectioncontrol AS "treeselectioncontrol",
+		a.fileuploadselection AS "fileuploadselection"
+	</sql>
+	
+	<sql id="cmsCompTestJoins">
+		LEFT JOIN sys_user u8 ON u8.id = a.personselection
+		LEFT JOIN sys_office o9 ON o9.id = a.sectorselection
+		LEFT JOIN sys_area a10 ON a10.id = a.regionalchoice
+	</sql>
+    
+	<select id="get" resultType="CmsCompTest">
+		SELECT 
+			<include refid="cmsCompTestColumns"/>
+		FROM cms_comp_test a
+		<include refid="cmsCompTestJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsCompTest">
+		SELECT 
+			<include refid="cmsCompTestColumns"/>
+		FROM cms_comp_test a
+		<include refid="cmsCompTestJoins"/>
+		<where>
+			
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="singletext != null and singletext != ''">
+				AND a.singletext LIKE 
+					<if test="dbName == 'oracle'">'%'||#{singletext}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{singletext}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{singletext},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{singletext},'%')</if>
+			</if>
+			<if test="multitext != null and multitext != ''">
+				AND a.multitext = #{multitext}
+			</if>
+			<if test="dropdown != null and dropdown != ''">
+				AND a.dropdown = #{dropdown}
+			</if>
+			<if test="radiobtn != null and radiobtn != ''">
+				AND a.radiobtn = #{radiobtn}
+			</if>
+			<if test="checkbox != null and checkbox != ''">
+				AND a.checkbox = #{checkbox}
+			</if>
+			<if test="dateselection != null and dateselection != ''">
+				AND a.dateselection = #{dateselection}
+			</if>
+			<if test="personselection != null and personselection != ''">
+				AND a.personselection = #{personselection}
+			</if>
+			<if test="sectorselection != null and sectorselection != ''">
+				AND a.sectorselection = #{sectorselection}
+			</if>
+			<if test="regionalchoice != null and regionalchoice != ''">
+				AND a.regionalchoice = #{regionalchoice}
+			</if>
+			<if test="treeselectioncontrol != null and treeselectioncontrol != ''">
+				AND a.treeselectioncontrol = #{treeselectioncontrol}
+			</if>
+			<if test="fileuploadselection != null and fileuploadselection != ''">
+				AND a.fileuploadselection = #{fileuploadselection}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsCompTest">
+		SELECT 
+			<include refid="cmsCompTestColumns"/>
+		FROM cms_comp_test a
+		<include refid="cmsCompTestJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_comp_test(
+			id,
+			singletext,
+			multitext,
+			dropdown,
+			radiobtn,
+			checkbox,
+			dateselection,
+			personselection,
+			sectorselection,
+			regionalchoice,
+			treeselectioncontrol,
+			fileuploadselection
+		) VALUES (
+			#{id},
+			#{singletext},
+			#{multitext},
+			#{dropdown},
+			#{radiobtn},
+			#{checkbox},
+			#{dateselection},
+			#{personselection},
+			#{sectorselection},
+			#{regionalchoice},
+			#{treeselectioncontrol},
+			#{fileuploadselection}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_comp_test SET 	
+			singletext = #{singletext},
+			multitext = #{multitext},
+			dropdown = #{dropdown},
+			radiobtn = #{radiobtn},
+			checkbox = #{checkbox},
+			dateselection = #{dateselection},
+			personselection = #{personselection},
+			sectorselection = #{sectorselection},
+			regionalchoice = #{regionalchoice},
+			treeselectioncontrol = #{treeselectioncontrol},
+			fileuploadselection = #{fileuploadselection}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cms_comp_test
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

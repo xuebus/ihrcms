@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.cms.dao.CmsCardDao">
+    
+	<sql id="cmsCardColumns">
+		a.id AS "id",
+		a.cardnum AS "cardnum",
+		a.resumenum AS "resumenum",
+		a.cardurl AS "cardurl",
+		a.createtime AS "createtime",
+		a.verifytime AS "verifytime",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="cmsCardJoins">
+	</sql>
+    
+	<select id="get" resultType="CmsCard">
+		SELECT 
+			<include refid="cmsCardColumns"/>
+		FROM cms_card a
+		<include refid="cmsCardJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsCard">
+		SELECT 
+			<include refid="cmsCardColumns"/>
+		FROM cms_card a
+		<include refid="cmsCardJoins"/>
+		<where>
+			
+			<if test="cardnum != null and cardnum != ''">
+				AND a.cardnum LIKE 
+					<if test="dbName == 'oracle'">'%'||#{cardnum}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{cardnum}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{cardnum},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{cardnum},'%')</if>
+			</if>
+			<if test="resumenum != null and resumenum != ''">
+				AND a.resumenum LIKE 
+					<if test="dbName == 'oracle'">'%'||#{resumenum}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{resumenum}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{resumenum},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{resumenum},'%')</if>
+			</if>
+			<if test="cardurl != null and cardurl != ''">
+				AND a.cardurl = #{cardurl}
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime = #{createtime}
+			</if>
+			<if test="verifytime != null and verifytime != ''">
+				AND a.verifytime = #{verifytime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsCard">
+		SELECT 
+			<include refid="cmsCardColumns"/>
+		FROM cms_card a
+		<include refid="cmsCardJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_card(
+			id,
+			cardnum,
+			resumenum,
+			cardurl,
+			createtime,
+			verifytime,
+			status
+		) VALUES (
+			#{id},
+			#{cardnum},
+			#{resumenum},
+			#{cardurl},
+			#{createtime},
+			#{verifytime},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_card SET 	
+			cardnum = #{cardnum},
+			resumenum = #{resumenum},
+			cardurl = #{cardurl},
+			createtime = #{createtime},
+			verifytime = #{verifytime},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cms_card
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

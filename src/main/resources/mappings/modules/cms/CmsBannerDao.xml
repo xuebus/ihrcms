@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.cms.dao.CmsBannerDao">
+    
+	<sql id="cmsBannerColumns">
+		a.id AS "id",
+		a.bname AS "bname",
+		a.bremark AS "bremark",
+		a.btype AS "btype",
+		a.jumpurl AS "jumpurl",
+		a.bparas AS "bparas",
+		a.starttime AS "starttime",
+		a.endtime AS "endtime",
+		a.citycode AS "citycode",
+		a.version AS "version",
+		a.sn AS "sn",
+		a.status AS "status",
+		a.imgurl AS "imgurl",
+		a.createtime AS "createtime",
+		a.fileupload AS "fileupload"
+	</sql>
+	
+	<sql id="cmsBannerJoins">
+		LEFT JOIN sys_area a9 ON a9.id = a.citycode
+	</sql>
+    
+	<select id="get" resultType="CmsBanner">
+		SELECT 
+			<include refid="cmsBannerColumns"/>
+		FROM cms_banner a
+		<include refid="cmsBannerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsBanner">
+		SELECT 
+			<include refid="cmsBannerColumns"/>
+		FROM cms_banner a
+		<include refid="cmsBannerJoins"/>
+		<where>
+			
+			<if test="bname != null and bname != ''">
+				AND a.bname LIKE 
+					<if test="dbName == 'oracle'">'%'||#{bname}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{bname}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{bname},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{bname},'%')</if>
+			</if>
+			<if test="jumpurl != null and jumpurl != ''">
+				AND a.jumpurl LIKE 
+					<if test="dbName == 'oracle'">'%'||#{jumpurl}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{jumpurl}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{jumpurl},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{jumpurl},'%')</if>
+			</if>
+			<if test="starttime != null and starttime != ''">
+				AND a.starttime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND a.endtime &gt;= #{endtime}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="imgurl != null and imgurl != ''">
+				AND a.imgurl LIKE 
+					<if test="dbName == 'oracle'">'%'||#{imgurl}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{imgurl}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{imgurl},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{imgurl},'%')</if>
+			</if>
+			<if test="createtime != null and createtime != ''">
+				AND a.createtime &gt;= #{createtime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsBanner">
+		SELECT 
+			<include refid="cmsBannerColumns"/>
+		FROM cms_banner a
+		<include refid="cmsBannerJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_banner(
+			id,
+			bname,
+			bremark,
+			btype,
+			jumpurl,
+			bparas,
+			starttime,
+			endtime,
+			citycode,
+			version,
+			sn,
+			status,
+			imgurl,
+			createtime,
+			fileupload
+		) VALUES (
+			#{id},
+			#{bname},
+			#{bremark},
+			#{btype},
+			#{jumpurl},
+			#{bparas},
+			#{starttime},
+			#{endtime},
+			#{citycode},
+			#{version},
+			#{sn},
+			#{status},
+			#{imgurl},
+			#{createtime},
+			#{fileupload}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_banner SET 	
+			bname = #{bname},
+			bremark = #{bremark},
+			btype = #{btype},
+			jumpurl = #{jumpurl},
+			bparas = #{bparas},
+			starttime = #{starttime},
+			endtime = #{endtime},
+			citycode = #{citycode},
+			version = #{version},
+			sn = #{sn},
+			status = #{status},
+			createtime = #{createtime},
+			fileupload = #{fileupload}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cms_banner
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.cms.dao.CmsStartpageDao">
+    
+	<sql id="cmsStartpageColumns">
+		a.id AS "id",
+		a.imgid AS "imgid",
+		a.url AS "url",
+		a.width AS "width",
+		a.height AS "height",
+		a.isdefault AS "isdefault",
+		a.zonecode AS "zonecode",
+		a.platform AS "platform",
+		a.androidcountdown AS "androidcountdown",
+		a.ioscountdown AS "ioscountdown",
+		a.showtimer AS "showtimer",
+		a.rate AS "rate",
+		a.status AS "status",
+		a.onlinestarttime AS "onlinestarttime",
+		a.onlineendtime AS "onlineendtime",
+		a.description AS "description",
+		a.publishtime AS "publishtime"
+	</sql>
+	
+	<sql id="cmsStartpageJoins">
+	</sql>
+    
+	<select id="get" resultType="CmsStartpage">
+		SELECT 
+			<include refid="cmsStartpageColumns"/>
+		FROM cms_startpage a
+		<include refid="cmsStartpageJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsStartpage">
+		SELECT 
+			<include refid="cmsStartpageColumns"/>
+		FROM cms_startpage a
+		<include refid="cmsStartpageJoins"/>
+		<where>
+			
+			<if test="imgid != null and imgid != ''">
+				AND a.imgid LIKE 
+					<if test="dbName == 'oracle'">'%'||#{imgid}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{imgid}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{imgid},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{imgid},'%')</if>
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url LIKE 
+					<if test="dbName == 'oracle'">'%'||#{url}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{url}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{url},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{url},'%')</if>
+			</if>
+			<if test="width != null and width != ''">
+				AND a.width = #{width}
+			</if>
+			<if test="height != null and height != ''">
+				AND a.height = #{height}
+			</if>
+			<if test="rate != null and rate != ''">
+				AND a.rate = #{rate}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="onlinestarttime != null and onlinestarttime != ''">
+				AND a.onlinestarttime &gt;= #{onlinestarttime}
+			</if>
+			<if test="onlineendtime != null and onlineendtime != ''">
+				AND a.onlineendtime &gt;= #{onlineendtime}
+			</if>
+			<if test="publishtime != null and publishtime != ''">
+				AND a.publishtime &gt;= #{publishtime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsStartpage">
+		SELECT 
+			<include refid="cmsStartpageColumns"/>
+		FROM cms_startpage a
+		<include refid="cmsStartpageJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_startpage(
+			id,
+			imgid,
+			url,
+			width,
+			height,
+			isdefault,
+			zonecode,
+			platform,
+			androidcountdown,
+			ioscountdown,
+			showtimer,
+			rate,
+			status,
+			onlinestarttime,
+			onlineendtime,
+			description,
+			publishtime
+		) VALUES (
+			#{id},
+			#{imgid},
+			#{url},
+			#{width},
+			#{height},
+			#{isdefault},
+			#{zonecode},
+			#{platform},
+			#{androidcountdown},
+			#{ioscountdown},
+			#{showtimer},
+			#{rate},
+			#{status},
+			#{onlinestarttime},
+			#{onlineendtime},
+			#{description},
+			#{publishtime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_startpage SET 	
+			imgid = #{imgid},
+			url = #{url},
+			width = #{width},
+			height = #{height},
+			isdefault = #{isdefault},
+			zonecode = #{zonecode},
+			platform = #{platform},
+			androidcountdown = #{androidcountdown},
+			ioscountdown = #{ioscountdown},
+			showtimer = #{showtimer},
+			rate = #{rate},
+			status = #{status},
+			onlinestarttime = #{onlinestarttime},
+			onlineendtime = #{onlineendtime},
+			description = #{description},
+			publishtime = #{publishtime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cms_startpage
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

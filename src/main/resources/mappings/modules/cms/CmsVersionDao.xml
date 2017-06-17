@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.cms.dao.CmsVersionDao">
+    
+	<sql id="cmsVersionColumns">
+		a.id AS "id",
+		a.version AS "version",
+		a.title AS "title",
+		a.content AS "content",
+		a.target AS "target",
+		a.url AS "url",
+		a.app AS "app",
+		a.time AS "time"
+	</sql>
+	
+	<sql id="cmsVersionJoins">
+	</sql>
+    
+	<select id="get" resultType="CmsVersion">
+		SELECT 
+			<include refid="cmsVersionColumns"/>
+		FROM cms_version a
+		<include refid="cmsVersionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CmsVersion">
+		SELECT 
+			<include refid="cmsVersionColumns"/>
+		FROM cms_version a
+		<include refid="cmsVersionJoins"/>
+		<where>
+			
+			<if test="version != null and version != ''">
+				AND a.version = #{version}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="content != null and content != ''">
+				AND a.content LIKE 
+					<if test="dbName == 'oracle'">'%'||#{content}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{content}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{content},'%')</if>
+					<if test="dbName == 'postgre'">concat('%',#{content},'%')</if>
+			</if>
+			<if test="target != null and target != ''">
+				AND a.target = #{target}
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url = #{url}
+			</if>
+			<if test="app != null and app != ''">
+				AND a.app = #{app}
+			</if>
+			<if test="time != null and time != ''">
+				AND a.time = #{time}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CmsVersion">
+		SELECT 
+			<include refid="cmsVersionColumns"/>
+		FROM cms_version a
+		<include refid="cmsVersionJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_version(
+			id,
+			version,
+			title,
+			content,
+			target,
+			url,
+			app,
+			time
+		) VALUES (
+			#{id},
+			#{version},
+			#{title},
+			#{content},
+			#{target},
+			#{url},
+			#{app},
+			#{time}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_version SET 	
+			version = #{version},
+			title = #{title},
+			content = #{content},
+			target = #{target},
+			url = #{url},
+			app = #{app},
+			time = #{time}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM cms_version
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
